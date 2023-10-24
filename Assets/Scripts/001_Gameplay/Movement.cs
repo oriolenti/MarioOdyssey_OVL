@@ -22,6 +22,9 @@ public class Movement : MonoBehaviour
 
     private bool crouching = false;
 
+    public static Input_Manager _INPUT_MANAGER;
+    private PlayerInputActions playerInputs;
+
 
 
     private void Awake()
@@ -63,9 +66,15 @@ public class Movement : MonoBehaviour
             {
                 maxJumps = 3;
             }
+            
+            if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed())
+            {
+                Debug.Log("Presionado");
+            }
 
 
-            if (Input.GetKey(KeyCode.Space) && maxJumps == 3)
+
+        if (Input_Manager._INPUT_MANAGER.JumpButtonPressed() && maxJumps == 3)
             {
                 maxJumps--;
                 finalVelocity.y = jumpForce;
