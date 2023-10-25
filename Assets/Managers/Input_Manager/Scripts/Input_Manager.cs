@@ -8,6 +8,9 @@ public class Input_Manager : MonoBehaviour
     public static Input_Manager _INPUT_MANAGER;
 
     private float timeSinceJumpPressed = 0f;
+    private float timeMouse = 0f;
+
+
     private Vector2 leftAxisValue = Vector2.zero;
 
 
@@ -62,5 +65,26 @@ public class Input_Manager : MonoBehaviour
     public bool JumpButtonPressed()
     {
         return this.timeSinceJumpPressed == 0f;
+    }
+
+    public bool LeftMouseMovement()
+    {
+        return this.timeMouse == 0f;
+    }
+
+    public bool RightMouseMovement()
+    {
+        return this.timeMouse == 0f;
+    }
+
+    public bool UpMouseMovement()
+    {
+        return this.timeMouse == 0f;
+    }
+
+    public bool DownMouseMovement()
+    {
+        return this.timeMouse == 0f;
+
     }
 }
