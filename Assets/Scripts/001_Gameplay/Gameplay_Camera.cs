@@ -21,24 +21,9 @@ public class Gameplay_Camera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Input_Manager._INPUT_MANAGER.RightMouseMovement())
-        {
-            rotationX++;
-        }
+        rotationX += Input_Manager._INPUT_MANAGER.GetRightJoystick().y;
+        rotationY += Input_Manager._INPUT_MANAGER.GetRightJoystick().x;
 
-        if (Input_Manager._INPUT_MANAGER.LeftMouseMovement())
-        {
-            rotationX--;
-        }
-
-        if (Input_Manager._INPUT_MANAGER.UpMouseMovement())
-        {
-            rotationY++;
-        }
-        if (Input_Manager._INPUT_MANAGER.DownMouseMovement())
-        {
-            rotationY--;
-        }
 
         rotationX = Mathf.Clamp(rotationX, -10f, 50f);
 

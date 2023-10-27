@@ -12,6 +12,7 @@ public class Input_Manager : MonoBehaviour
 
 
     private Vector2 leftAxisValue = Vector2.zero;
+    private Vector2 mouseAxisValue = Vector2.zero;
 
 
     private PlayerInputActions playerInputs;
@@ -33,6 +34,8 @@ public class Input_Manager : MonoBehaviour
             //Delegates
             playerInputs.Character.Jump.performed += JumpButtonPressed;
             playerInputs.Character.Move.performed += LeftAxisUpdate;
+            playerInputs.Character.Camera.performed += MouseAxisUpdate;
+
 
 
             _INPUT_MANAGER = this;
@@ -42,6 +45,7 @@ public class Input_Manager : MonoBehaviour
 
     private void Update()
     {
+        timeSinceJumpPressed += Time.deltaTime;
         InputSystem.Update();
     }
 
@@ -54,7 +58,7 @@ public class Input_Manager : MonoBehaviour
 
     private void JumpButtonPressed(InputAction.CallbackContext context)
     {
-        Debug.Log("Entro");
+        this.timeSinceJumpPressed = 0;
     }
 
     public bool GetSouthButtonPressed()
@@ -62,29 +66,17 @@ public class Input_Manager : MonoBehaviour
         return this.timeSinceJumpPressed == 0f;
     }
 
-    public bool JumpButtonPressed()
+    private void MouseAxisUpdate(InputAction.CallbackContext context)
     {
-        return this.timeSinceJumpPressed == 0f;
+        mouseAxisValue = context.ReadValue<Vector2>();
+        Debug.Log("Magnitude: " + leftAxisValue.magnitude);
+        Debug.Log("Normalize: " + leftAxisValue.normalized);
     }
 
-    public bool LeftMouseMovement()
+    public Vector2 GetRightJoystick()
     {
-        return this.timeMouse == 0f;
+        return this.mouseAxisValue;
     }
 
-    public bool RightMouseMovement()
-    {
-        return this.timeMouse == 0f;
-    }
 
-    public bool UpMouseMovement()
-    {
-        return this.timeMouse == 0f;
-    }
-
-    public bool DownMouseMovement()
-    {
-        return this.timeMouse == 0f;
-
-    }
 }

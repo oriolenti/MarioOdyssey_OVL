@@ -36,94 +36,72 @@ public class Movement : MonoBehaviour
     private void Update()
     {
         // Calcular dirección XZ
-        Vector3 direction = Quaternion.Euler(0f, camera.transform.eulerAngles.y, 0f) * new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        //Vector3 direction = Quaternion.Euler(0f, camera.transform.eulerAngles.y, 0f) * new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        Vector3 direction = new Vector3 (0, -1, 0);
         direction.Normalize();
+
 
         // Calcular velocidad XZ
         finalVelocity.x = direction.x * velocityXZ;
         finalVelocity.z = direction.z * velocityXZ;
 
-        // Calcular gravedad
+
+        //Si está en el suelo...
+
         if (controller.isGrounded)
         {
-            finalVelocity.y = -gravity * Time.deltaTime; 
-        }
-        else
-        {
-            finalVelocity.y -= gravity * Time.deltaTime;
-        }
+            finalVelocity.y = -gravity * Time.deltaTime;
+            coyoteJump = 1f;
 
-
-   
-        if (controller.isGrounded)
-        {
-            // Salto
-            if (coyoteJump >= 0f)
+            //Salto
+            if (coyoteJump > 0f)
             {
-                coyoteJump -= Time.deltaTime * 10;
-            }
-            else if (coyoteJump <= 0f)
-            {
-                maxJumps = 3;
-            }
-            
-            if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed())
-            {
-                Debug.Log("Presionado");
-            }
+                if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed() && maxJumps == 3)
+                {
+                    maxJumps--;
+                    finalVelocity.y = jumpForce;
+                }
 
+                else if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed() && maxJumps == 2)
+                {
+                    maxJumps--;
+                    finalVelocity.y = jumpForce + 5;
+                }
 
-
-        if (Input_Manager._INPUT_MANAGER.JumpButtonPressed() && maxJumps == 3)
-            {
-                maxJumps--;
-                finalVelocity.y = jumpForce;
-                coyoteJump = 3f;
+                else if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed() && maxJumps == 1)
+                {
+                    finalVelocity.y = jumpForce + 10;
+                    maxJumps = 3;
+                }
             }
-
-            else if (Input.GetKey(KeyCode.Space) && maxJumps == 2 && coyoteJump > 0)
-            {
-                maxJumps--;
-                finalVelocity.y = jumpForce + 5;
-                coyoteJump = 3f;
-            }
-            
-            else if (Input.GetKey(KeyCode.Space) && maxJumps == 1 && coyoteJump > 0)
-            {
-                finalVelocity.y = jumpForce + 10;
-                maxJumps = 3;
-            }
-
-
             else
             {
-                finalVelocity.y = direction.y * gravity * Time.deltaTime;
-                coyoteTime = 1f;
+                maxJumps = 3;
             }
+
         }
         else
         {
             finalVelocity.y += direction.y * gravity * Time.deltaTime;
-            coyoteTime -= Time.deltaTime;
-            if (Input.GetKey(KeyCode.Space) && coyoteTime >= 0f)
-            {
-                finalVelocity.y = jumpForce;
-                coyoteTime = 0f;
-            }
 
-            if (Input.GetKey(KeyCode.LeftControl)) {
+            coyoteJump -= Time.deltaTime;
+
+            /*if (Input.GetKey(KeyCode.LeftControl)) {
                 crouching = true;
-            }
+            }*/
 
         }
+
+
 
         controller.Move(finalVelocity * Time.deltaTime);
 
         // Mirada por dirección
-        if (direction != Vector3.zero)
+        /*if (direction != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
         }
+        */
     }
 }
