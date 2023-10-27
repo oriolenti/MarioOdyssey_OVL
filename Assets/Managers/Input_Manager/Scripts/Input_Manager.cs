@@ -55,16 +55,22 @@ public class Input_Manager : MonoBehaviour
         Debug.Log("Magnitude: " + leftAxisValue.magnitude);
         Debug.Log("Normalize: " + leftAxisValue.normalized);
     }
+    public Vector2 GetMovementInput()
+    {
+        return this.leftAxisValue;
+    }
+
 
     private void JumpButtonPressed(InputAction.CallbackContext context)
     {
         this.timeSinceJumpPressed = 0;
     }
 
-    public bool GetSouthButtonPressed()
+    public bool GetJumpButtonPressed()
     {
         return this.timeSinceJumpPressed == 0f;
     }
+
 
     private void MouseAxisUpdate(InputAction.CallbackContext context)
     {

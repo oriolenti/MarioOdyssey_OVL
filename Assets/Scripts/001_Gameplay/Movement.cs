@@ -15,7 +15,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private int maxJumps = 3;
 
     private float gravity = 20f;
-    private float jumpForce = 8f;
+    private float jumpForce = 4f;
 
     [SerializeField] private float coyoteTime = 1f;
     [SerializeField] private float coyoteJump = 3f;
@@ -36,8 +36,18 @@ public class Movement : MonoBehaviour
     private void Update()
     {
         // Calcular dirección XZ
-        //Vector3 direction = Quaternion.Euler(0f, camera.transform.eulerAngles.y, 0f) * new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-        Vector3 direction = new Vector3 (0, -1, 0);
+        Vector2 movementInput = Input_Manager._INPUT_MANAGER.GetMovementInput();
+
+        //Movimiento relativo a la cámara
+
+        Vector3 cameraForward = camera.transform.forward;
+        Vector3 cameraRight = camera.transform.right;
+
+        cameraForward.y = 0;
+        cameraRight.y = 0;
+
+        Vector3 direction = (cameraForward * movementInput.y + cameraRight * movementInput.x).normalized;
+
         direction.Normalize();
 
 
@@ -51,24 +61,28 @@ public class Movement : MonoBehaviour
         if (controller.isGrounded)
         {
             finalVelocity.y = -gravity * Time.deltaTime;
-            coyoteJump = 1f;
 
             //Salto
+
+            if (Input_Manager._INPUT_MANAGER.GetJumpButtonPressed() && maxJumps == 3)
+            {
+                maxJumps--;
+                finalVelocity.y = jumpForce;
+                coyoteJump = 1f;
+            }
+
             if (coyoteJump > 0f)
             {
-                if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed() && maxJumps == 3)
-                {
-                    maxJumps--;
-                    finalVelocity.y = jumpForce;
-                }
+                finalVelocity.y -= gravity * Time.deltaTime;
 
-                else if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed() && maxJumps == 2)
+                if (Input_Manager._INPUT_MANAGER.GetJumpButtonPressed() && maxJumps == 2)
                 {
                     maxJumps--;
                     finalVelocity.y = jumpForce + 5;
+                    coyoteJump = 1f;
                 }
 
-                else if (Input_Manager._INPUT_MANAGER.GetSouthButtonPressed() && maxJumps == 1)
+                if (Input_Manager._INPUT_MANAGER.GetJumpButtonPressed() && maxJumps == 1)
                 {
                     finalVelocity.y = jumpForce + 10;
                     maxJumps = 3;
@@ -79,12 +93,16 @@ public class Movement : MonoBehaviour
                 maxJumps = 3;
             }
 
+            controller.Move(finalVelocity * Time.deltaTime);
         }
         else
         {
-            finalVelocity.y += direction.y * gravity * Time.deltaTime;
+            finalVelocity.y -= gravity * Time.deltaTime;
 
-            coyoteJump -= Time.deltaTime;
+            if (coyoteJump >= 0f)
+            {
+                coyoteJump -= Time.deltaTime;
+            }
 
             /*if (Input.GetKey(KeyCode.LeftControl)) {
                 crouching = true;
@@ -97,11 +115,11 @@ public class Movement : MonoBehaviour
         controller.Move(finalVelocity * Time.deltaTime);
 
         // Mirada por dirección
-        /*if (direction != Vector3.zero)
+        if (direction != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
         }
-        */
+        
     }
 }
