@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class Player_Movement : MonoBehaviour
 {
     private CharacterController controller;
     private GameObject player;
@@ -10,10 +10,11 @@ public class Movement : MonoBehaviour
     [SerializeField] private Camera camera;
 
     private Vector3 finalVelocity = Vector3.zero;
+    private Vector3 lastPosition;
 
     [SerializeField] private float velocityXZ = 5f;
     [SerializeField] private float maxSpeed = 5f;
-    private float currentSpeed = 0f;
+    [SerializeField] private float currentSpeed = 0f;
 
     [SerializeField] private int maxJumps = 3;
 
@@ -58,7 +59,6 @@ public class Movement : MonoBehaviour
         finalVelocity.z = direction.z * velocityXZ;
 
 
-
         //Si está en el suelo...
         if (controller.isGrounded)
         {
@@ -100,6 +100,7 @@ public class Movement : MonoBehaviour
             }
 
             // Crouching
+            /*
             if (Input_Manager._INPUT_MANAGER.GetCrouchButtonPressed())
             {
                 Debug.Log("Croucheando");
@@ -110,6 +111,7 @@ public class Movement : MonoBehaviour
                 Debug.Log("Dejó de crouchear");
                 isCrouching = false;
             }
+            */
         }
         else
         {
@@ -129,6 +131,14 @@ public class Movement : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
         }
+
+        //Calcular Speed para Animator
+        Vector3 horizontalVelocity = controller.velocity;
+        horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
+        //currentSpeed = horizontalVelocity.magnitude;
+
+        currentSpeed += velocityXZ * Time.deltaTime;
+
     }
 
     public float GetCurrentSpeed()
