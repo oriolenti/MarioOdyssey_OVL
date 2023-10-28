@@ -8,7 +8,7 @@ public class Input_Manager : MonoBehaviour
     public static Input_Manager _INPUT_MANAGER;
 
     private float timeSinceJumpPressed = 0f;
-    private float timeMouse = 0f;
+    private float timeSinceCrouchButtonPressed = 0f;
 
 
     private Vector2 leftAxisValue = Vector2.zero;
@@ -36,6 +36,8 @@ public class Input_Manager : MonoBehaviour
             playerInputs.Character.Move.performed += LeftAxisUpdate;
             playerInputs.Character.Camera.performed += MouseAxisUpdate;
 
+            playerInputs.Character.Crouch.performed += CrouchButtonPressed;
+            playerInputs.Character.Crouch.canceled += CrouchButtonReleased;
 
 
             _INPUT_MANAGER = this;
@@ -49,6 +51,7 @@ public class Input_Manager : MonoBehaviour
         InputSystem.Update();
     }
 
+    //Movement
     private void LeftAxisUpdate(InputAction.CallbackContext context)
     {
         leftAxisValue = context.ReadValue<Vector2>();
@@ -60,10 +63,10 @@ public class Input_Manager : MonoBehaviour
         return this.leftAxisValue;
     }
 
-
+    //Jump
     private void JumpButtonPressed(InputAction.CallbackContext context)
     {
-        this.timeSinceJumpPressed = 0;
+        this.timeSinceJumpPressed = 0f;
     }
 
     public bool GetJumpButtonPressed()
@@ -72,6 +75,28 @@ public class Input_Manager : MonoBehaviour
     }
 
 
+    //Crouching
+    private void CrouchButtonPressed(InputAction.CallbackContext context)
+    {
+        this.timeSinceCrouchButtonPressed = 0f;
+    }
+
+    public bool GetCrouchButtonPressed()
+    {
+        return this.timeSinceCrouchButtonPressed == 0f;
+    }
+
+    private void CrouchButtonReleased(InputAction.CallbackContext context)
+    {
+        this.timeSinceCrouchButtonPressed = 0.1f;
+    }
+
+    public bool GetCrouchButtonReleased()
+    {
+        return this.timeSinceCrouchButtonPressed > 0f;
+    }
+
+    //Camera - Mouse
     private void MouseAxisUpdate(InputAction.CallbackContext context)
     {
         mouseAxisValue = context.ReadValue<Vector2>();
@@ -83,6 +108,4 @@ public class Input_Manager : MonoBehaviour
     {
         return this.mouseAxisValue;
     }
-
-
 }

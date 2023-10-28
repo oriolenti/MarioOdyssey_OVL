@@ -15,12 +15,12 @@ public class Movement : MonoBehaviour
     [SerializeField] private int maxJumps = 3;
 
     private float gravity = 20f;
-    private float jumpForce = 4f;
+    private float jumpForce = 8f;
 
     [SerializeField] private float coyoteTime = 1f;
-    [SerializeField] private float coyoteJump = 3f;
+    [SerializeField] private float coyoteJump = 2f;
 
-    private bool crouching = false;
+    private bool isCrouching = false;
 
     public static Input_Manager _INPUT_MANAGER;
     private PlayerInputActions playerInputs;
@@ -56,33 +56,37 @@ public class Movement : MonoBehaviour
         finalVelocity.z = direction.z * velocityXZ;
 
 
-        //Si está en el suelo...
 
+        //Si está en el suelo...
         if (controller.isGrounded)
         {
-            finalVelocity.y = -gravity * Time.deltaTime;
-
-            //Salto
-
-            if (Input_Manager._INPUT_MANAGER.GetJumpButtonPressed() && maxJumps == 3)
+            //CoyoteJump timer start
+            if (coyoteJump > 1f)
             {
-                maxJumps--;
-                finalVelocity.y = jumpForce;
-                coyoteJump = 1f;
+                coyoteJump -= Time.deltaTime;
+            }
+            //If CoyoteJump ends resets maxJumps
+            else if (coyoteJump <= 0f)
+            {
+                maxJumps = 3;
             }
 
-            if (coyoteJump > 0f)
+            // Jump
+            if (Input_Manager._INPUT_MANAGER.GetJumpButtonPressed())
             {
-                finalVelocity.y -= gravity * Time.deltaTime;
-
-                if (Input_Manager._INPUT_MANAGER.GetJumpButtonPressed() && maxJumps == 2)
+                if (maxJumps == 3)
+                {
+                    maxJumps--;
+                    finalVelocity.y = jumpForce;
+                    coyoteJump = 1f;
+                }
+                else if (maxJumps == 2)
                 {
                     maxJumps--;
                     finalVelocity.y = jumpForce + 5;
-                    coyoteJump = 1f;
+                    coyoteJump = 2f;
                 }
-
-                if (Input_Manager._INPUT_MANAGER.GetJumpButtonPressed() && maxJumps == 1)
+                else if (maxJumps == 1)
                 {
                     finalVelocity.y = jumpForce + 10;
                     maxJumps = 3;
@@ -90,10 +94,20 @@ public class Movement : MonoBehaviour
             }
             else
             {
-                maxJumps = 3;
+                finalVelocity.y = direction.y * gravity * Time.deltaTime;
             }
 
-            controller.Move(finalVelocity * Time.deltaTime);
+            // Crouching
+            if (Input_Manager._INPUT_MANAGER.GetCrouchButtonPressed())
+            {
+                Debug.Log("Croucheando");
+                isCrouching = true;
+            }
+            else if (Input_Manager._INPUT_MANAGER.GetCrouchButtonReleased())
+            {
+                Debug.Log("Dejó de crouchear");
+                isCrouching = false;
+            }
         }
         else
         {
@@ -103,14 +117,7 @@ public class Movement : MonoBehaviour
             {
                 coyoteJump -= Time.deltaTime;
             }
-
-            /*if (Input.GetKey(KeyCode.LeftControl)) {
-                crouching = true;
-            }*/
-
         }
-
-
 
         controller.Move(finalVelocity * Time.deltaTime);
 
@@ -120,6 +127,5 @@ public class Movement : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
         }
-        
     }
 }

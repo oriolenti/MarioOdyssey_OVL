@@ -25,7 +25,6 @@ public class Gameplay_Camera : MonoBehaviour
         rotationX += Input_Manager._INPUT_MANAGER.GetRightJoystick().y;
         rotationY += Input_Manager._INPUT_MANAGER.GetRightJoystick().x;
 
-
         rotationX = Mathf.Clamp(rotationX, -10f, 50f);
 
         transform.eulerAngles = new Vector3(rotationX, rotationY, 0); 
