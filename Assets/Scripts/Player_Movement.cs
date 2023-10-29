@@ -29,12 +29,21 @@ public class Player_Movement : MonoBehaviour
     public static Input_Manager _INPUT_MANAGER;
     private PlayerInputActions playerInputs;
 
+    private Animator animator;
+    private Animator_Mario animationController;
+    bool isRunning = false;
+    bool isJump1 = false;
+    bool isJump2 = false;
+    bool isJump3 = false;
+
 
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
         player = GetComponent<GameObject>();
+        animator = GetComponent<Animator>();
+        animationController = GetComponent<Animator_Mario>();
     }
 
     private void Update()
@@ -59,6 +68,20 @@ public class Player_Movement : MonoBehaviour
         finalVelocity.z = direction.z * velocityXZ;
 
 
+        //Calcular Speed para Animator - No funciona al final se pasa directamente
+        if (movementInput != Vector2.zero && finalVelocity != Vector3.zero)
+        {
+            currentSpeed += velocityXZ * Time.deltaTime;
+            animator.SetBool("running", true);
+        }
+        else
+        {
+            currentSpeed -= velocityXZ * Time.deltaTime;
+            animator.SetBool("running", false);
+        }
+        currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
+
+
         //Si está en el suelo...
         if (controller.isGrounded)
         {
@@ -78,18 +101,27 @@ public class Player_Movement : MonoBehaviour
             {
                 if (maxJumps == 3)
                 {
+                    animator.SetBool("jump1", true);
+                    isJump1 = true;
+
                     maxJumps--;
                     finalVelocity.y = jumpForce;
                     coyoteJump = 1f;
                 }
                 else if (maxJumps == 2)
                 {
+                    animator.SetBool("jump2", true);
+                    isJump2 = true;
+
                     maxJumps--;
                     finalVelocity.y = jumpForce + 5;
                     coyoteJump = 2f;
                 }
                 else if (maxJumps == 1)
                 {
+                    animator.SetBool("jump3", true);
+                    isJump3 = true;
+
                     finalVelocity.y = jumpForce + 10;
                     maxJumps = 3;
                 }
@@ -97,6 +129,13 @@ public class Player_Movement : MonoBehaviour
             else
             {
                 finalVelocity.y = direction.y * gravity * Time.deltaTime;
+
+                animator.SetBool("jump1", false);
+                animator.SetBool("jump2", false);
+                animator.SetBool("jump3", false);
+                isJump1 = false;
+                isJump2 = false;
+                isJump3 = false;
             }
 
             // Crouching
@@ -132,17 +171,28 @@ public class Player_Movement : MonoBehaviour
             transform.rotation = targetRotation;
         }
 
-        //Calcular Speed para Animator
-        Vector3 horizontalVelocity = controller.velocity;
-        horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
-        //currentSpeed = horizontalVelocity.magnitude;
-
-        currentSpeed += velocityXZ * Time.deltaTime;
-
     }
 
     public float GetCurrentSpeed()
     {
         return this.currentSpeed;
+    }
+
+    public bool GetRunning()
+    {
+        return this.isRunning;
+    }
+
+    public bool GetJump1()
+    {
+        return this.isJump1;
+    }
+    public bool GetJump2()
+    {
+        return this.isJump2;
+    }
+    public bool GetJump3()
+    {
+        return this.isJump3;
     }
 }
