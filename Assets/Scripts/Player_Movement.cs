@@ -14,7 +14,7 @@ public class Player_Movement : MonoBehaviour
 
     [SerializeField] private float velocityXZ = 5f;
     [SerializeField] private float maxSpeed = 5f;
-    [SerializeField] private float currentSpeed = 0f;
+    private float currentSpeed = 0f;
 
     [SerializeField] private int maxJumps = 3;
 
@@ -31,10 +31,12 @@ public class Player_Movement : MonoBehaviour
 
     private Animator animator;
     private Animator_Mario animationController;
-    bool isRunning = false;
-    bool isJump1 = false;
-    bool isJump2 = false;
-    bool isJump3 = false;
+    private bool isRunning = false;
+    private bool isJump1 = false;
+    private bool isJump2 = false;
+    private bool isJump3 = false;
+
+    [SerializeField] private AudioClip lavaSound;
 
 
 
@@ -171,6 +173,19 @@ public class Player_Movement : MonoBehaviour
             transform.rotation = targetRotation;
         }
 
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.collider.CompareTag("Lava"))
+        {
+            transform.localPosition = Vector3.zero;
+            /*
+            AudioSource audio = GetComponent<AudioSource>();
+            audio.clip = lavaSound;
+            audio.Play();
+            */
+        }
     }
 
     public float GetCurrentSpeed()
