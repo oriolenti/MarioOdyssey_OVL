@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Wall
   - Lava
+  - Propulsor
+  - Star
   layers:
   - Default
   - TransparentFX

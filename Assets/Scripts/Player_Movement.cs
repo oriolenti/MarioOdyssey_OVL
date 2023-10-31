@@ -186,6 +186,12 @@ public class Player_Movement : MonoBehaviour
             audio.Play();
             */
         }
+
+        if (hit.collider.CompareTag("Propulsor"))
+        {
+            finalVelocity.y += 2f;
+            finalVelocity.x += 0.5f;
+        }
     }
 
     public float GetCurrentSpeed()
