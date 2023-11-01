@@ -25,14 +25,14 @@ public class StarManager : MonoBehaviour
         else if (other.CompareTag("Coin"))
         {
             pickedCoins++;
-            AudioSource.PlayClipAtPoint(coinSound, transform.position, 1);
+            //AudioSource.PlayClipAtPoint(coinSound, transform.position, 1);
             other.gameObject.SetActive(false);
         }
     }
 
     private void CheckWinCondition()
     {
-        if (pickedStars >= 1)
+        if (pickedStars >= starsToWin)
         {
             AudioSource.PlayClipAtPoint(endSound, transform.position, 1);
             SceneManager.LoadScene("EndingScene");
