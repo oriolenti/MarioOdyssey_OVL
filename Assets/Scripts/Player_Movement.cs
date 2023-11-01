@@ -37,6 +37,7 @@ public class Player_Movement : MonoBehaviour
     private bool isJump3 = false;
 
     [SerializeField] private AudioClip lavaSound;
+    [SerializeField] private AudioClip boingSound;
 
 
 
@@ -180,17 +181,14 @@ public class Player_Movement : MonoBehaviour
         if(hit.collider.CompareTag("Lava"))
         {
             transform.localPosition = Vector3.zero;
-            /*
-            AudioSource audio = GetComponent<AudioSource>();
-            audio.clip = lavaSound;
-            audio.Play();
-            */
+            AudioSource.PlayClipAtPoint(lavaSound, transform.position, 1);
         }
 
         if (hit.collider.CompareTag("Propulsor"))
         {
             finalVelocity.y += 2f;
             finalVelocity.x += 0.5f;
+            AudioSource.PlayClipAtPoint(boingSound, transform.position, 1);
         }
     }
 
