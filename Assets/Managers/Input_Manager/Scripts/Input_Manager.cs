@@ -48,6 +48,7 @@ public class Input_Manager : MonoBehaviour
     private void Update()
     {
         timeSinceJumpPressed += Time.deltaTime;
+        //Subir tiempo crouch
         InputSystem.Update();
     }
 

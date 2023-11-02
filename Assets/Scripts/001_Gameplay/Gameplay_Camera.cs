@@ -22,8 +22,8 @@ public class Gameplay_Camera : MonoBehaviour
     private void LateUpdate()
     {
         //Rotation depende de Mouse Input ahora
-        rotationX += Input_Manager._INPUT_MANAGER.GetRightJoystick().y;
-        rotationY += Input_Manager._INPUT_MANAGER.GetRightJoystick().x;
+        rotationX += Input_Manager._INPUT_MANAGER.GetRightJoystick().y*0.5f;
+        rotationY += Input_Manager._INPUT_MANAGER.GetRightJoystick().x * 0.5f;
 
         rotationX = Mathf.Clamp(rotationX, -10f, 50f);
 

@@ -142,7 +142,7 @@ public class Player_Movement : MonoBehaviour
             }
 
             // Crouching
-            /*
+            
             if (Input_Manager._INPUT_MANAGER.GetCrouchButtonPressed())
             {
                 Debug.Log("Croucheando");
@@ -153,7 +153,7 @@ public class Player_Movement : MonoBehaviour
                 Debug.Log("Dejó de crouchear");
                 isCrouching = false;
             }
-            */
+            
         }
         else
         {
@@ -180,6 +180,8 @@ public class Player_Movement : MonoBehaviour
     {
         if(hit.collider.CompareTag("Lava"))
         {
+            //Character controller = false // Disable
+            //O cargas de nuevo el nivel
             transform.localPosition = Vector3.zero;
             AudioSource.PlayClipAtPoint(lavaSound, transform.position, 1);
         }
