@@ -48,7 +48,8 @@ public class Input_Manager : MonoBehaviour
     private void Update()
     {
         timeSinceJumpPressed += Time.deltaTime;
-        //Subir tiempo crouch
+        timeSinceCrouchButtonPressed += Time.deltaTime;
+
         InputSystem.Update();
     }
 
@@ -94,7 +95,7 @@ public class Input_Manager : MonoBehaviour
 
     public bool GetCrouchButtonReleased()
     {
-        return this.timeSinceCrouchButtonPressed > 0f;
+        return this.timeSinceCrouchButtonPressed == 0f;
     }
 
     //Camera - Mouse
