@@ -7,10 +7,9 @@ public class StarManager : MonoBehaviour
 {
     [SerializeField] private int starsToWin = 3;
     [SerializeField] private int pickedStars = 0;
-    [SerializeField] private int pickedCoins = 0;
+
 
     [SerializeField] private AudioClip starSound;
-    [SerializeField] private AudioClip coinSound;
     [SerializeField] private AudioClip endSound;
 
     private void OnTriggerEnter(Collider other)
@@ -21,12 +20,6 @@ public class StarManager : MonoBehaviour
             other.gameObject.SetActive(false);
             AudioSource.PlayClipAtPoint(starSound, transform.position, 1);
             CheckWinCondition();
-        }
-        else if (other.CompareTag("Coin"))
-        {
-            pickedCoins++;
-            //AudioSource.PlayClipAtPoint(coinSound, transform.position, 1);
-            other.gameObject.SetActive(false);
         }
     }
 
